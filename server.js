@@ -10,16 +10,17 @@ var ties;
 var gotId;
 
 var con = mysql.createConnection({
-  host: "///",
-  user: "///",
-  password: "///",
-  database: "///"
+  host: "localhost",
+  user: "root",
+  password: "JagroshSucks1337",
+  database: "jep"
 });
 
 
 function getStats(userid) {
-  con.connect(function() {
-    con.query("SELECT * FROM level WHERE userid='" + userid + "'", function (result, fields) {
+  con.connect(function(err) {
+    con.query("SELECT * FROM level WHERE userid='" + userid + "'", function (err, result, fields) {
+    console.log(result);
   	level = result[0].level;
   	correct = result[0].correct;
   	wins = result[0].wins;
