@@ -7,7 +7,7 @@ const settings = require('../settings.json');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
-const r = require('../modules/database');
+const con = require('../functions/sql');
 
 passport.use(new Strategy({
     clientID: settings.clientID,
@@ -40,39 +40,28 @@ router.get('/info', (req, res, next) => {
 
 router.get('/callback', passport.authenticate('discord', {
 }), (req, res, next) => { 
-    r.table('users').get(req.user.id).run(async (error, user) => {
-        if (!user) {
-            r.table('users').insert({
-                id: req.user.id,
-                username: req.user.username,
-                tag: req.user.username + "#" + req.user.discriminator,
-                discrim: req.user.discriminator,
-                avatar: req.user.avatar,
-                bio: '',
-                website: '',
-                background: '',
-                lastseen: '',
-                isBanned: false,
-                isMod: false,
-                isAdmin: false,
-                isVerifiedDev: false,
-                lastseen: Date.now(),
-                lastedited: '',
-                lasteditedby: '',
-                forceAuth: false
-            }).run()
-        } else {
-            r.table('users').get(req.user.id).update({
-                username: req.user.username,
-                tag: req.user.username + "#" + req.user.discriminator,
-                discrim: req.user.discriminator,
-                avatar: req.user.avatar,
-                lastseen: Date.now(),
-                forceAuth: false
-            }).run()
+    con.con.connect(function(err) {
+        const data = con.con.query("SELECT COUNT(*) AS total FROM level WHERE userid='" + req.user.id + "'", function (err, result, fields) {
+            console.log(result);
+            if (result[0].total > 0) {
+            console.log("exists");
+            //  check if they are in web then input/upd
+            con.webcon.connect(function(err) {
+                const data = con.webcon.query("SELECT COUNT(*) AS total FROM webuser WHERE userid='" + req.user.id + "'", function (err, result2, fields) {
+                    if (result2[0].total > 0) {
+                        // upd
+                    }else{
+                        // create only web user
+                    }
+                });
+            });
+        }else{
+            console.log("nah");
+            // input user into web and reg
         }
-        await res.redirect('/')
-    })
+        });
+    });
+     res.redirect('/profile/' + req.user.id)
 })
 
 router.get('/logout', (req, res) => {

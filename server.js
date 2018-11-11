@@ -1,54 +1,44 @@
-const express = require('express')
-var mysql = require('mysql');
-const app = express()
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const settings = require('./settings.json');
 
-var gid = "0";
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
 
-var level;
-var correct;
-var wins;
-var loss;
-var ties;
-var gotId;
+// view engine setup
+app.set('trust proxy', true)
+.set('views', path.join(__dirname, 'views'))
+.set('view engine', 'ejs')
+.set('view options', {pretty: true})
+.locals.pretty = app.get('env') === 'development';
 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "JagroshSucks1337",
-  database: "jep"
-});
-
-function getStats(userid) {
-  con.connect(function(err) {
-    con.query("SELECT * FROM level WHERE userid='" + userid + "'", function (err, result, fields) {
-    console.log(result);
-  	level = result[0].level;
-  	correct = result[0].correct;
-  	wins = result[0].wins;
-  	loss = result[0].lose;
-  	ties = result[0].tie;
-  	gotId = result[0].userid;
-    });
-  });
-}
-
-function inputUser(userid) {
-
-}
-
-app.get('/', function (req, res) {
-  res.send('<style>#userfield {background-color: #7289DA;border: none;position: absolute;top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 3px; cursor: pointer; font-size: 15px; padding: 15px 25px; font-weight: bold; text-transform: uppercase; color: #FFF !important; }#login {background-color: #7289DA;border: none;position: absolute;top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 3px; cursor: pointer; font-size: 15px; padding: 15px 25px; font-weight: bold; text-transform: uppercase; color: #FFF !important; }</style><title>Jeopardy! - Home</title><form>User ID:<br><input id="useridf" type="text" name="useridf"><br><button id="login">login</button>')
+app.use(logger('dev'))
+.use(express.json())
+.use(express.urlencoded({ extended: false }))
+.use(cookieParser())
+.use(express.static(path.join(__dirname, 'public')))
+.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
 })
+.use(cookieSession({
+  secret: settings.secret,
+  maxAge: 1000 * 60 * 60 * 24 * 7
+}))
+.use(cookieParser(settings.secret))
+.use(passport.initialize())
+.use(passport.session());
 
-app.get('/auth', function (req, res) {
-  res.send("<title>Jeopardy - Logging in...</title>");
-})
+app.use('/', require('./routes/index'))
+.use('/profile', require('./routes/profile'))
+.use('/auth', require('./routes/auth'))
 
-app.get('/loggedin', function (req, res) {
-  getStats("207335289650151426");
-  res.send('Stats for USERID : '  + gotId + " : \n" + "Level : " + level + "\n" + "Correct : " + correct + "\n" + "Wins : " + wins + "\n Losses : " + loss + "\n Ties : " + ties)
-})
 
-app.listen(80, function () {
-  console.log('Server Started!')
-})
+server.listen(process.env.PORT || 80);
+
+
