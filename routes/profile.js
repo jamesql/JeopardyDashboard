@@ -4,8 +4,8 @@ const con = require('../functions/sql');
 const user = require('../functions/user');
 
 router.get('/:id', async (req, res, next) => {
-    con.con.connect(function(err) {
-        const data = con.con.query("SELECT * FROM level WHERE userid='" + req.params.id + "'", function (err, result, fields) {
+    con.connect(function(err) {
+        const data = con.query("SELECT * FROM level WHERE userid='" + req.params.id + "'", function (err, result, fields) {
             const level = result[0].level;
             const correct = result[0].correct;
             const loss = result[0].lose;
