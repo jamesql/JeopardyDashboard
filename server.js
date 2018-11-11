@@ -17,7 +17,6 @@ var con = mysql.createConnection({
   password: "JagroshSucks1337",
   database: "jep"
 });
-//
 
 function getStats(userid) {
   con.connect(function(err) {
