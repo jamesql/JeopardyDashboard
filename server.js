@@ -10,7 +10,7 @@ var wins;
 var loss;
 var ties;
 var gotId;
-
+//wigga
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
