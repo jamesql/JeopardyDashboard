@@ -12,13 +12,13 @@ var gotId;
 
 var con = mysql.createConnection({
   host: "///",
-  user: "root",
+  user: "///",
   password: "///",
   database: "///"
 });
 
 app.get('/', function (req, res) {
-  res.send('<title>Jeopardy! - Home</title>')
+  res.send('<style>#login {background-color: #7289DA;border: none;position: absolute;top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 3px; cursor: pointer; font-size: 15px; padding: 15px 25px; font-weight: bold; text-transform: uppercase; color: #FFF !important; }</style><title>Jeopardy! - Home</title><button id="login">login</button>')
 })
 
 app.get('/loggedin', function (req, res) {
