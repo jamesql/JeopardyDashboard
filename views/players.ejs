@@ -5,4 +5,13 @@
       </div>
     </div>
   </section>
+
+<style>
+</style>
+<section>
+  <% for(var x = 0; x < result.length; x++) { %>
+        <a href=./profile/<%= result[x].userid %>><%= result[x].username %>
+        <br>
+    <% } %>
+    </section>
 <%- include('../views/partials/footer.ejs') %>
