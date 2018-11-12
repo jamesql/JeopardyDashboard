@@ -1,8 +1,62 @@
 <%- include('../views/partials/header.ejs') %>
-<h1>
-<%= wins %>
-</h1>
-<h2>
-The person viewing this page is <%= user.username %>
-</h2>
+<section class="hero is-medium is-info">
+  <div class="hero-body">
+    <div class="container">
+      <img style="width: 75px; height: 75px; float:left; margin-right: 8px;border-radius: 50%;" title="<%= result2[0].username %>'s Avatar" src="https://cdn.discordapp.com/avatars/<%= result2[0].userid %>/<%= result2[0].avi %>?size=256" title="Bot Application">
+      <h1 class="title">
+        <%= result2[0].username + "#" + result2[0].discrim %>
+      </h1>
+      <h2 class="subtitle">
+        <%= result2[0].description || "This user has not set a bio yet." %>
+      </h2>
+    </div>
+  </div>
+</section>
+<section class="section">
+<div class="container margin-top-20">
+            <h3 class="title is-3">User Statistics</h3>
+            <nav class="level">
+                <div class="level-item has-text-centered">
+                    <div>
+                    <a href="/lb">
+                        <p class="heading" id="headingtitle">Level</p>
+                        <p class="title" id="headingsubtitle"><%= level %></p>
+                    </a>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                    <a href="/lb">
+                        <p class="heading" id="headingtitle">Correct</p>
+                        <p class="title" id="headingsubtitle"><%= correct.toLocaleString() %></p>
+                    </a>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                    <a href="/lb">
+                        <p class="heading" id="headingtitle">Wins</p>
+                        <p class="title" id="headingsubtitle"><%= wins %></p>
+                    </a>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                    <a href="/lb">
+                        <p class="heading" id="headingtitle">Losses</p>
+                        <p class="title" id="headingsubtitle"><%= loss %></p>
+                    </a>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
+                    <a href="/lb">
+                        <p class="heading" id="headingtitle">Ties</p>
+                        <p class="title" id="headingsubtitle"><%= ties %></p>
+                    </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </section>
 <%- include('../views/partials/footer.ejs') %>
